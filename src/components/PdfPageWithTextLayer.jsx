@@ -201,13 +201,6 @@ export default function PdfPageWithTextLayer({
       {shouldHighlight && !isProcessing && highlightRects.length > 0 && (
         <HighlightOverlay rects={highlightRects} />
       )}
-
-      {/* Processing indicator */}
-      {isProcessing && (
-        <div className="highlight-processing">
-          Finding highlights...
-        </div>
-      )}
     </div>
   )
 }

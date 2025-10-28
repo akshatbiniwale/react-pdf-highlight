@@ -25,6 +25,12 @@ export default function PdfViewer({
     setIsInputValid(true)
   }, [propPageNumber])
 
+  // Update input value when page number changes (e.g., from navigation buttons)
+  useEffect(() => {
+    setInputValue(pageNumber.toString())
+    setIsInputValid(true)
+  }, [pageNumber])
+
   const onDocumentLoadSuccessHandler = useCallback((pdf) => {
     const nextNumPages = pdf?.numPages
     setNumPages(nextNumPages)

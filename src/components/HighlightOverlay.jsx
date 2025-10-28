@@ -14,7 +14,7 @@ export default function HighlightOverlay({ rects }) {
     <div className="highlight-overlay">
       {rects.map((rect, index) => (
         <div
-          key={index}
+          key={`rect-${index}`}
           className="highlight-rect"
           style={{
             position: 'absolute',
@@ -54,7 +54,7 @@ export function MergedHighlightOverlay({ rects }) {
     <div className="highlight-overlay">
       {mergedRects.map((rect, index) => (
         <div
-          key={index}
+          key={`merged-rect-${index}`}
           className="highlight-rect merged"
           style={{
             position: 'absolute',
