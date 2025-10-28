@@ -1,34 +1,77 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import PdfViewer from './components/PdfViewer'
+import AnalysisPanel from './components/AnalysisPanel'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [highlightActive, setHighlightActive] = useState(false)
+  const [currentTargetPhrase, setCurrentTargetPhrase] = useState('gain on sale of non-current assets')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [activeNumber, setActiveNumber] = useState(null)
+
+  const handleHighlightToggle = () => {
+    setHighlightActive(!highlightActive)
+  }
+
+  const handleReferenceClick = (referenceNumber) => {
+    // Map references to pages and phrases
+    const referenceMappings = {
+      1: { page: 3, phrase: 'ebitda' },
+      2: { page: 5, phrase: 'ebitda' },
+      3: { page: 15, phrase: 'gain on sale of non-current assets' }
+    }
+
+    const mapping = referenceMappings[referenceNumber]
+    if (mapping) {
+      console.log('Reference clicked:', referenceNumber, 'navigating to page:', mapping.page, 'highlighting:', mapping.phrase)
+      setCurrentPage(mapping.page)
+      setCurrentTargetPhrase(mapping.phrase)
+      setHighlightActive(true)
+      setActiveNumber(null)
+    }
+  }
+
+  const handleNumberClick = (number) => {
+    // Map numbers to their corresponding text phrases in the PDF
+    const numberMappings = {
+      '25 m': '25',
+      '208 m': '208',
+      '2.3 bn': '2.3',
+      '2.1 bn': '2.1',
+      '36 m': '36',
+      '71 m': '71',
+      '50 m': '50',
+      '25': '25',
+      '208': '208',
+      '2,298': '2,298'
+    }
+
+    const targetPhrase = numberMappings[number] || number
+    console.log('Highlighting number:', number, 'with target phrase:', targetPhrase)
+    setCurrentTargetPhrase(targetPhrase)
+    setHighlightActive(true)
+    setActiveNumber(number)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app">
+      <div className="pdf-panel">
+        <PdfViewer
+          onDocumentLoadSuccess={(data) => console.log('PDF loaded successfully:', data)}
+          onDocumentLoadError={(error) => console.error('PDF load error:', error)}
+          shouldHighlight={highlightActive}
+          targetPhrase={currentTargetPhrase}
+          pageNumber={currentPage}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <AnalysisPanel
+        onHighlightToggle={handleHighlightToggle}
+        highlightActive={highlightActive}
+        onNumberClick={handleNumberClick}
+        onReferenceClick={handleReferenceClick}
+        activeNumber={activeNumber}
+      />
+    </div>
   )
 }
 
