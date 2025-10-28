@@ -122,7 +122,7 @@ export default function AnalysisPanel({ onHighlightToggle, highlightActive, onRe
           disabled={!highlightActive}
           aria-label={highlightActive ? 'Clear highlight' : 'No highlight to clear'}
         >
-          {highlightActive ? 'Clear Highlight' : 'No Highlight'}
+          Clear Highlight
         </button>
       </div>
     </div>
