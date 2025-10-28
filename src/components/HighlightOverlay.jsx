@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 /**
  * Component to render highlight overlays over PDF text
@@ -31,6 +32,10 @@ export default function HighlightOverlay({ rects }) {
       ))}
     </div>
   )
+}
+
+HighlightOverlay.propTypes = {
+  rects: PropTypes.array
 }
 
 /**
@@ -67,6 +72,10 @@ export function MergedHighlightOverlay({ rects }) {
       ))}
     </div>
   )
+}
+
+MergedHighlightOverlay.propTypes = {
+  rects: PropTypes.array
 }
 
 /**
