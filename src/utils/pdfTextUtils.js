@@ -51,11 +51,8 @@ export async function computeBoundingBoxes(page, targetPhrase, containerElement,
     const normalizedTarget = (targetPhrase || '').toLowerCase().trim()
     if (!normalizedTarget) return []
 
-    console.log('Searching for:', normalizedTarget, 'in', items.length, 'text items')
-
     // First try multi-item matching for phrases that span multiple text items
     const multiItemMatches = findMatchingTextSpans(items, targetPhrase)
-    console.log('Multi-item matches found:', multiItemMatches.length)
 
     const matches = []
 
@@ -92,7 +89,6 @@ export async function computeBoundingBoxes(page, targetPhrase, containerElement,
         if (!itemText) continue
 
         if (itemText.includes(normalizedTarget)) {
-          console.log('Found single-item match:', itemText, 'contains:', normalizedTarget)
           const rect = itemToViewportRect(item, viewport)
           const cssY = rect.y - rect.height
           matches.push({
@@ -105,8 +101,6 @@ export async function computeBoundingBoxes(page, targetPhrase, containerElement,
         }
       }
     }
-
-    console.log('Total matches found:', matches.length)
 
     return matches
   } catch (error) {

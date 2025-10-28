@@ -23,12 +23,10 @@ function App() {
 
     const mapping = referenceMappings[referenceNumber]
     if (mapping) {
-      console.log('Reference clicked:', referenceNumber, 'navigating to page:', mapping.page, 'highlighting:', mapping.phrase)
       setCurrentPage(mapping.page)
       setCurrentTargetPhrase(mapping.phrase)
       setHighlightActive(true)
       setActiveNumber(null)
-      console.log('Set target phrase to:', mapping.phrase, 'and highlightActive to true')
     }
   }
 
@@ -48,14 +46,12 @@ function App() {
     }
 
     const targetPhrase = numberMappings[number] || number
-    console.log('Highlighting number:', number, 'with target phrase:', targetPhrase)
     setCurrentTargetPhrase(targetPhrase)
     setHighlightActive(true)
     setActiveNumber(number)
   }
 
   const handlePageNavigate = (pageNumber) => {
-    console.log('Navigating to page:', pageNumber)
     setCurrentPage(pageNumber)
     setHighlightActive(false) // Clear any active highlights when navigating
     setActiveNumber(null)
@@ -65,7 +61,7 @@ function App() {
     <div className="app">
       <div className="pdf-panel">
         <PdfViewer
-          onDocumentLoadSuccess={(data) => console.log('PDF loaded successfully:', data)}
+          onDocumentLoadSuccess={(data) => {}}
           onDocumentLoadError={(error) => console.error('PDF load error:', error)}
           shouldHighlight={highlightActive}
           targetPhrase={currentTargetPhrase}

@@ -18,7 +18,6 @@ export default function PdfViewer({
 
   // Update page number when prop changes
   useEffect(() => {
-    console.log('PdfViewer: propPageNumber changed to:', propPageNumber)
     setPageNumber(propPageNumber)
   }, [propPageNumber])
 
@@ -96,7 +95,6 @@ export default function PdfViewer({
         file={`${import.meta.env.BASE_URL}Maersk_Q2_2025_Interim_Report.pdf`}
         onLoadSuccess={onDocumentLoadSuccessHandler}
         onLoadError={onDocumentLoadErrorHandler}
-        onLoadProgress={({ loaded, total }) => console.log(`Loading: ${loaded}/${total}`)}
         loading={<div className="pdf-loading">Loading PDF...</div>}
         error={<div className="pdf-error">Error loading PDF. Please ensure the PDF file is placed in /public/Maersk_Q2_2025_Interim_Report.pdf</div>}
       >
@@ -106,7 +104,7 @@ export default function PdfViewer({
           scale={1.5}
           targetPhrase={targetPhrase}
           shouldHighlight={shouldHighlight}
-          onRectsReady={(rects) => console.log('Highlight rectangles calculated:', rects)}
+          onRectsReady={(rects) => {}}
         />
       </Document>
       {numPages && (
