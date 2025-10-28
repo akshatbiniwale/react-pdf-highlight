@@ -115,3 +115,37 @@ npm run preview
 3. **Jump to Pages**: Click "Page X" links to navigate directly to specific pages
 4. **Clear Highlights**: Use the "Clear Highlight" button to remove active highlights
 
+## Deployment to GitHub Pages
+
+This project can be deployed to GitHub Pages for free hosting:
+
+1. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy to GitHub Pages**:
+   ```bash
+   npm run deploy
+   ```
+
+3. **Enable GitHub Pages**:
+   - Go to your repository on GitHub
+   - Navigate to Settings → Pages
+   - Under "Source", select "Deploy from a branch"
+   - Choose "gh-pages" branch from the dropdown
+   - Click Save
+
+Your app will be available at: `https://<github-username>.github.io/react-pdf-highlight/`
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
