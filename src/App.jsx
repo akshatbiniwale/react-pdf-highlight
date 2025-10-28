@@ -53,6 +53,13 @@ function App() {
     setActiveNumber(number)
   }
 
+  const handlePageNavigate = (pageNumber) => {
+    console.log('Navigating to page:', pageNumber)
+    setCurrentPage(pageNumber)
+    setHighlightActive(false) // Clear any active highlights when navigating
+    setActiveNumber(null)
+  }
+
   return (
     <div className="app">
       <div className="pdf-panel">
@@ -69,6 +76,7 @@ function App() {
         highlightActive={highlightActive}
         onNumberClick={handleNumberClick}
         onReferenceClick={handleReferenceClick}
+        onPageNavigate={handlePageNavigate}
         activeNumber={activeNumber}
       />
     </div>
