@@ -16,9 +16,9 @@ function App() {
   const handleReferenceClick = (referenceNumber) => {
     // Map references to pages and phrases
     const referenceMappings = {
-      1: { page: 3, phrase: 'ebitda' },
-      2: { page: 5, phrase: 'ebitda' },
-      3: { page: 15, phrase: 'gain on sale of non-current assets' }
+      1: { page: 3, phrase: 'Maersk\u2019s results continued to improve year-on-year' },
+      2: { page: 5, phrase: 'EBITDA increased to USD 2.3bn (USD 2.1bn)' },
+      3: { page: 15, phrase: 'Gain on sale of non-current assets' }
     }
 
     const mapping = referenceMappings[referenceNumber]
@@ -28,6 +28,7 @@ function App() {
       setCurrentTargetPhrase(mapping.phrase)
       setHighlightActive(true)
       setActiveNumber(null)
+      console.log('Set target phrase to:', mapping.phrase, 'and highlightActive to true')
     }
   }
 

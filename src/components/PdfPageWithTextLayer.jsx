@@ -37,7 +37,7 @@ export default function PdfPageWithTextLayer({
 
         // If highlighting is enabled, extract text and compute bounding boxes
         if (shouldHighlight && targetPhrase) {
-          console.log('Computing bounding boxes for:', targetPhrase, 'on page:', pageNumber)
+          console.log('Computing bounding boxes for:', targetPhrase, 'on page:', pageNumber, 'shouldHighlight:', shouldHighlight)
           setIsProcessing(true)
           const rects = await computeBoundingBoxes(
             page,

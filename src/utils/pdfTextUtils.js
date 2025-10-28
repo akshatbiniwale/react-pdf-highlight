@@ -51,27 +51,62 @@ export async function computeBoundingBoxes(page, targetPhrase, containerElement,
     const normalizedTarget = (targetPhrase || '').toLowerCase().trim()
     if (!normalizedTarget) return []
 
+    console.log('Searching for:', normalizedTarget, 'in', items.length, 'text items')
+
+    // First try multi-item matching for phrases that span multiple text items
+    const multiItemMatches = findMatchingTextSpans(items, targetPhrase)
+    console.log('Multi-item matches found:', multiItemMatches.length)
+
     const matches = []
 
-    for (const item of items) {
-      const itemText = (item.str || '').toLowerCase()
-      if (!itemText) continue
+    // Process multi-item matches
+    for (const match of multiItemMatches) {
+      if (match.matchedItems.length > 0) {
+        // Get the first and last items to calculate bounding box
+        const firstItem = items[match.matchedItems[0].itemIndex]
+        const lastItem = items[match.matchedItems.at(-1).itemIndex]
 
-      // Simple contains match per text item
-      if (itemText.includes(normalizedTarget)) {
-        const rect = itemToViewportRect(item, viewport)
-        // PDF.js viewport has origin at top-left but text transform y is baseline from bottom-left.
-        // Convert to top-left by flipping against viewport height and subtracting text height.
-        const yFromTop = (viewport.height - rect.y) - rect.height
+        const firstRect = itemToViewportRect(firstItem, viewport)
+        const lastRect = itemToViewportRect(lastItem, viewport)
+
+        // Create a bounding box that spans from first to last item
+        const minX = Math.min(firstRect.x, lastRect.x)
+        const maxX = Math.max(firstRect.x + firstRect.width, lastRect.x + lastRect.width)
+        const minY = Math.min(firstRect.y - firstRect.height, lastRect.y - lastRect.height)
+        const maxY = Math.max(firstRect.y, lastRect.y)
+
         matches.push({
-          x: offsetX + rect.x * scaleX,
-          y: offsetY + yFromTop * scaleY,
-          width: rect.width * scaleX,
-          height: rect.height * scaleY,
-          str: item.str
+          x: offsetX + minX * scaleX,
+          y: offsetY + minY * scaleY,
+          width: (maxX - minX) * scaleX,
+          height: (maxY - minY) * scaleY,
+          str: targetPhrase // Use original phrase for display
         })
       }
     }
+
+    // Fallback: single-item matching for shorter phrases
+    if (matches.length === 0) {
+      for (const item of items) {
+        const itemText = (item.str || '').toLowerCase()
+        if (!itemText) continue
+
+        if (itemText.includes(normalizedTarget)) {
+          console.log('Found single-item match:', itemText, 'contains:', normalizedTarget)
+          const rect = itemToViewportRect(item, viewport)
+          const cssY = rect.y - rect.height
+          matches.push({
+            x: offsetX + rect.x * scaleX,
+            y: offsetY + cssY * scaleY,
+            width: rect.width * scaleX,
+            height: rect.height * scaleY,
+            str: item.str
+          })
+        }
+      }
+    }
+
+    console.log('Total matches found:', matches.length)
 
     return matches
   } catch (error) {
@@ -150,11 +185,12 @@ export function findMatchingTextSpans(textItems, targetPhrase) {
 export function itemToViewportRect(item, viewport) {
   // Transform item matrix into viewport space
   const m = pdfjsLib.Util.transform(viewport.transform, item.transform)
-  // Width/height are derived from the transformed basis vectors
-  const width = Math.hypot(m[0], m[2])
-  const height = Math.hypot(m[1], m[3])
-  // m[4], m[5] is the baseline point. Convert to top-left by subtracting height.
+  // Use the actual width/height from the text item, scaled by viewport
+  const width = (item.width || item.fontSize || 12) * viewport.scale
+  const height = (item.height || item.fontSize || 12) * viewport.scale
+  // m[4], m[5] is the baseline point in viewport coordinates
+  // For proper positioning, we use the baseline as the bottom of the text
   const x = m[4]
-  const y = m[5]
+  const y = m[5]  // Keep baseline y, don't subtract height
   return { x, y, width, height }
 }

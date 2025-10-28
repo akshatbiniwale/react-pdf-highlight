@@ -18,6 +18,7 @@ export default function PdfViewer({
 
   // Update page number when prop changes
   useEffect(() => {
+    console.log('PdfViewer: propPageNumber changed to:', propPageNumber)
     setPageNumber(propPageNumber)
   }, [propPageNumber])
 
