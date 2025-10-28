@@ -7,7 +7,6 @@ function App() {
   const [highlightActive, setHighlightActive] = useState(false)
   const [currentTargetPhrase, setCurrentTargetPhrase] = useState('gain on sale of non-current assets')
   const [currentPage, setCurrentPage] = useState(1)
-  const [activeNumber, setActiveNumber] = useState(null)
 
   const handleHighlightToggle = () => {
     setHighlightActive(!highlightActive)
@@ -26,35 +25,12 @@ function App() {
       setCurrentPage(mapping.page)
       setCurrentTargetPhrase(mapping.phrase)
       setHighlightActive(true)
-      setActiveNumber(null)
     }
-  }
-
-  const handleNumberClick = (number) => {
-    // Map numbers to their corresponding text phrases in the PDF
-    const numberMappings = {
-      '25 m': '25',
-      '208 m': '208',
-      '2.3 bn': '2.3',
-      '2.1 bn': '2.1',
-      '36 m': '36',
-      '71 m': '71',
-      '50 m': '50',
-      '25': '25',
-      '208': '208',
-      '2,298': '2,298'
-    }
-
-    const targetPhrase = numberMappings[number] || number
-    setCurrentTargetPhrase(targetPhrase)
-    setHighlightActive(true)
-    setActiveNumber(number)
   }
 
   const handlePageNavigate = (pageNumber) => {
     setCurrentPage(pageNumber)
     setHighlightActive(false) // Clear any active highlights when navigating
-    setActiveNumber(null)
   }
 
   return (
@@ -71,10 +47,8 @@ function App() {
       <AnalysisPanel
         onHighlightToggle={handleHighlightToggle}
         highlightActive={highlightActive}
-        onNumberClick={handleNumberClick}
         onReferenceClick={handleReferenceClick}
         onPageNavigate={handlePageNavigate}
-        activeNumber={activeNumber}
       />
     </div>
   )

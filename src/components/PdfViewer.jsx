@@ -15,10 +15,14 @@ export default function PdfViewer({
   const [numPages, setNumPages] = useState(null)
   const [pdfDocument, setPdfDocument] = useState(null)
   const [pageNumber, setPageNumber] = useState(propPageNumber)
+  const [inputValue, setInputValue] = useState(propPageNumber.toString())
+  const [isInputValid, setIsInputValid] = useState(true)
 
-  // Update page number when prop changes
+  // Update page number and input value when prop changes
   useEffect(() => {
     setPageNumber(propPageNumber)
+    setInputValue(propPageNumber.toString())
+    setIsInputValid(true)
   }, [propPageNumber])
 
   const onDocumentLoadSuccessHandler = useCallback((pdf) => {
@@ -47,6 +51,34 @@ export default function PdfViewer({
     setPageNumber(prev => Math.min(numPages || 1, prev + 1))
   }, [numPages])
 
+  const validateInput = useCallback((value) => {
+    const num = Number.parseInt(value) || 0
+    return num >= 1 && num <= (numPages || 1)
+  }, [numPages])
+
+  const handleInputChange = useCallback((e) => {
+    const value = e.target.value
+    setInputValue(value)
+    setIsInputValid(validateInput(value))
+  }, [validateInput])
+
+  const handleInputBlur = useCallback(() => {
+    if (isInputValid) {
+      const num = Number.parseInt(inputValue) || 1
+      goToPage(num)
+    } else {
+      // Reset to current valid page
+      setInputValue(pageNumber.toString())
+      setIsInputValid(true)
+    }
+  }, [isInputValid, inputValue, pageNumber])
+
+  const handleInputKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') {
+      handleInputBlur()
+    }
+  }, [handleInputBlur])
+
   const goToPage = useCallback((page) => {
     if (page >= 1 && page <= (numPages || 1)) {
       setPageNumber(page)
@@ -72,9 +104,11 @@ export default function PdfViewer({
               type="number"
               min="1"
               max={numPages}
-              value={pageNumber}
-              onChange={(e) => goToPage(Number.parseInt(e.target.value) || 1)}
-              className="page-input"
+              value={inputValue}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              onKeyDown={handleInputKeyDown}
+              className={`page-input ${isInputValid ? '' : 'invalid'}`}
               aria-label="Go to page"
             />
             <span className="page-total">of {numPages}</span>

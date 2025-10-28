@@ -35,32 +35,11 @@ ReferenceButton.propTypes = {
   onReferenceClick: PropTypes.func.isRequired
 }
 
-// Helper component for number buttons
-const NumberButton = ({ value, displayText, activeNumber, onNumberClick, onKeyDown }) => (
-  <button
-    className={`number-link ${activeNumber === value ? 'active' : ''}`}
-    onClick={() => onNumberClick(value)}
-    onKeyDown={(e) => onKeyDown(e, value)}
-    aria-label={`Highlight ${value} in PDF`}
-    tabIndex={0}
-  >
-    {displayText}
-  </button>
-)
-
-NumberButton.propTypes = {
-  value: PropTypes.string.isRequired,
-  displayText: PropTypes.string.isRequired,
-  activeNumber: PropTypes.string,
-  onNumberClick: PropTypes.func.isRequired,
-  onKeyDown: PropTypes.func.isRequired
-}
-
 /**
  * Analysis panel component with clickable reference links
  * Provides the analysis text and controls for highlighting
  */
-export default function AnalysisPanel({ onHighlightToggle, highlightActive, onNumberClick, onReferenceClick, activeNumber, onPageNavigate }) {
+export default function AnalysisPanel({ onHighlightToggle, highlightActive, onReferenceClick, onPageNavigate }) {
   const handleReferenceClick = (referenceNumber) => {
     if (onReferenceClick) {
       onReferenceClick(referenceNumber)
@@ -75,13 +54,6 @@ export default function AnalysisPanel({ onHighlightToggle, highlightActive, onNu
       onPageNavigate(pageNumber)
     }
   }
-
-  const handleNumberClick = (number) => {
-    if (onNumberClick) {
-      onNumberClick(number)
-    }
-  }
-
 
   return (
     <div className="analysis-panel" aria-label="Analysis">
@@ -160,8 +132,6 @@ export default function AnalysisPanel({ onHighlightToggle, highlightActive, onNu
 AnalysisPanel.propTypes = {
   onHighlightToggle: PropTypes.func,
   highlightActive: PropTypes.bool,
-  onNumberClick: PropTypes.func,
   onReferenceClick: PropTypes.func,
-  onPageNavigate: PropTypes.func,
-  activeNumber: PropTypes.string
+  onPageNavigate: PropTypes.func
 }
